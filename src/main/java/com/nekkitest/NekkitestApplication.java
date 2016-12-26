@@ -1,16 +1,14 @@
 package com.nekkitest;
 
-import com.nekkitest.service.SchedulerService;
-import org.springframework.boot.CommandLineRunner;
+import com.nekkitest.service.ScanService;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 //@EnableAutoConfiguration
 @Component
@@ -22,16 +20,23 @@ public class NekkitestApplication {
 		ConfigurableApplicationContext ctx = SpringApplication.run(NekkitestApplication.class,
 				args);
 
-		NekkitestApplication mainObj = ctx.getBean(NekkitestApplication.class);
-		SchedulerService service = ctx.getBean(SchedulerService.class);
-		service.sayHello();
+		//NekkitestApplication mainObj = ctx.getBean(NekkitestApplication.class);
+		ScanService service = ctx.getBean(ScanService.class);
 
-		mainObj.init();
+		System.out.println("Application has started");
 
-		System.out.println("Application exited");
+		Timer time = new Timer();
+		ScanTask st = new ScanTask(service);
+		time.schedule(st, 0, 1000);
 	}
 
-	public void init() {
-		System.out.println("inside init method");
+	private static class ScanTask extends TimerTask {
+		private ScanService service;
+		public ScanTask(ScanService service) {
+			this.service = service;
+		}
+		public void run() {
+			service.doScan(new Date());
+		}
 	}
 }

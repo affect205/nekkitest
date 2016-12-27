@@ -24,6 +24,12 @@ public class EntryXml {
 
     public EntryXml(long id) { this.id = id; }
 
+    public EntryXml(long id, String content, Date createDate) {
+        this.id = id;
+        this.content = content;
+        this.createDate = createDate;
+    }
+
     public long getId() { return id; }
 
     public void setId(long id) { this.id = id; }

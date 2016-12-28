@@ -12,7 +12,7 @@ import java.util.Date;
 public class EntryXml {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(name = "content", nullable = false, length = 1000)
     private String content;
@@ -22,17 +22,15 @@ public class EntryXml {
 
     public EntryXml() { }
 
-    public EntryXml(long id) { this.id = id; }
-
-    public EntryXml(long id, String content, Date createDate) {
+    public EntryXml(Long id, String content, Date createDate) {
         this.id = id;
         this.content = content;
         this.createDate = createDate;
     }
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
-    public void setId(long id) { this.id = id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getContent() { return content; }
 

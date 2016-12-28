@@ -17,17 +17,16 @@ public class EntryXmlDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void create(EntryXml user) {
-        entityManager.persist(user);
-        return;
+    public void create(EntryXml entryXml) {
+        if (entryXml == null) return;
+        entityManager.persist(entryXml);
     }
 
-    public void delete(EntryXml user) {
-        if (entityManager.contains(user))
-            entityManager.remove(user);
+    public void delete(EntryXml entryXml) {
+        if (entityManager.contains(entryXml))
+            entityManager.remove(entryXml);
         else
-            entityManager.remove(entityManager.merge(user));
-        return;
+            entityManager.remove(entityManager.merge(entryXml));
     }
 
     @SuppressWarnings("unchecked")
@@ -39,8 +38,7 @@ public class EntryXmlDao {
         return entityManager.find(EntryXml.class, id);
     }
 
-    public void update(EntryXml user) {
-        entityManager.merge(user);
-        return;
+    public void update(EntryXml entryXml) {
+        entityManager.merge(entryXml);
     }
 }

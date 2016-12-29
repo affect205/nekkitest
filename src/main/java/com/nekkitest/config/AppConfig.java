@@ -19,7 +19,11 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-public class HibernateConfig {
+public class AppConfig {
+    public static final String APP_PROCESSED = "app.monitoring.processed";
+    public static final String APP_UNPROCESSED = "app.monitoring.unprocessed";
+    public static final String APP_DELAY = "app.monitoring.delay";
+    public static final String APP_PERIOD = "app.monitoring.period";
 
     @Autowired
     private Environment env;

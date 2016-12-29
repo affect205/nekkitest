@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 import static java.util.concurrent.ThreadLocalRandom.current;
 
@@ -17,6 +18,16 @@ import static java.util.concurrent.ThreadLocalRandom.current;
  * Created by Alex on 28.12.2016.
  */
 public class TestUtils {
+    public static volatile long appStart;
+    public static volatile long processedCount;
+
+    public static void printStatistic() {
+        double time = (System.currentTimeMillis() - appStart) / 1000;
+        double performance = processedCount / time;
+        System.out.println(String.format(Locale.UK, "[Statistic]: working time = %.2f sec, processed count = %s files, performance = %.2f files/sec",
+                time, processedCount, performance));
+    }
+
     public static void startGeneration(String path, long delay, long period) {
         new Thread(() -> {
             try {
@@ -33,7 +44,7 @@ public class TestUtils {
 
     private static EntryXml generateEntryXml() {
         StringBuilder builder = new StringBuilder();
-        for (int ndx=0; ndx < current().nextInt(30, 200); ndx++) {
+        for (int ndx=0; ndx < current().nextInt(30, 1000); ndx++) {
             String str = String.valueOf((char)current().nextInt(65, 91));
             str = current().nextInt(2) % 2 == 0 ? str.toLowerCase() : str.toUpperCase();
             builder.append(str);
@@ -53,7 +64,7 @@ public class TestUtils {
                 "</entry>", entryXml.getContent(), formatter.format(entryXml.getCreateDate().toInstant())
         );
         System.out.println("GENERATED XML FILE....");
-        System.out.println(xmlString);
+        //System.out.println(xmlString);
 
         Path path = Paths.get(destPath + "/" + System.nanoTime() + ".xml");
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {

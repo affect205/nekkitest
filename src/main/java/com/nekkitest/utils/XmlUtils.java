@@ -8,10 +8,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -35,8 +35,9 @@ public class XmlUtils {
 
     public static EntryXml parseEntryXml(String srcXml) {
         try {
-            EntryXmlHandler handler = new EntryXmlHandler();
-            saxParser.parse(Files.newInputStream(Paths.get(srcXml)), handler);
+            Path pathXml = Paths.get(srcXml);
+            EntryXmlHandler handler = new EntryXmlHandler(String.valueOf(pathXml.getFileName()));
+            saxParser.parse(Files.newInputStream(pathXml), handler);
             return handler.getResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,13 +46,15 @@ public class XmlUtils {
     }
 
     private static class EntryXmlHandler extends DefaultHandler {
+        private String srcXml;
         private String thisElement = "";
         private EntryXml entryXml;
         private String content;
         private String createDate;
 
-        public EntryXmlHandler() {
-            entryXml = new EntryXml();
+        public EntryXmlHandler(String srcXml) {
+            this.srcXml = srcXml;
+            this.entryXml = new EntryXml();
         }
 
         public EntryXml getResult() {
@@ -60,7 +63,7 @@ public class XmlUtils {
 
         @Override
         public void startDocument() throws SAXException {
-            System.out.println("Start parse XML...");
+            System.out.println(String.format("Start parse XML - %s", srcXml));
         }
 
         @Override
@@ -84,7 +87,7 @@ public class XmlUtils {
 
         @Override
         public void endDocument() {
-            System.out.println("End parse XML...");
+            System.out.println(String.format("End parse XML - %s", srcXml));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             // TODO: validation
             if (createDate != null && !createDate.isEmpty()) {
